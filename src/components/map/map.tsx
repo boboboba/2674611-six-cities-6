@@ -5,6 +5,7 @@ import {useEffect, useRef} from 'react';
 import useMap from '../../hooks/useMap.ts';
 
 type MapProps = {
+  mapType?: 'offer' | 'city';
   points: Points;
   selectedPoint: Point | null;
 };
@@ -22,7 +23,7 @@ const currentCustomIcon = leaflet.icon({
 });
 
 function Map(props: MapProps): JSX.Element {
-  const {points, selectedPoint} = props;
+  const {mapType, points, selectedPoint} = props;
 
   const mapRef = useRef(null);
   const map = useMap(mapRef, points[0]);
@@ -46,16 +47,23 @@ function Map(props: MapProps): JSX.Element {
           .addTo(markerLayer);
       });
 
+      if (map && points.length > 0) {
+        map.setView([points[0].lat, points[0].lng], map.getZoom());
+      }
+
       return () => {
         map.removeLayer(markerLayer);
       };
     }
   }, [map, points, selectedPoint]);
 
+
+  const mapClass = mapType === 'offer' ? 'offer__map map' : 'cities__map map';
+
   return (
     <section
       ref={mapRef}
-      className="cities__map map"
+      className={mapClass}
       style={{ backgroundImage: 'none' }}
     />
   );
