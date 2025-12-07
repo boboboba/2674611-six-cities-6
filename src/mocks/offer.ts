@@ -64,5 +64,85 @@ export const testOffers: Offers = [
       lat: 52.3809553943508,
       lng: 4.939309666406198,
     }
+  },
+  {
+    id: '5',
+    title: 'Stylish apartment in historic center',
+    city: 'Paris',
+    type: 'Apartment',
+    price: 200,
+    rating: 4.8,
+    isPremium: true,
+    isFavorite: false,
+    previewImage: 'img/apartment-paris-01.jpg',
+    location: {
+      title: '',
+      lat: 48.856613,
+      lng: 2.352222,
+    }
+  },
+  {
+    id: '6',
+    title: 'Modern loft with cathedral view',
+    city: 'Cologne',
+    type: 'House',
+    price: 150,
+    rating: 4.5,
+    isPremium: false,
+    isFavorite: true,
+    previewImage: 'img/house-cologne-01.jpg',
+    location: {
+      title: '',
+      lat: 50.937531,
+      lng: 6.960279,
+    }
+  },
+  {
+    id: '7',
+    title: 'Cozy studio near Grand Place',
+    city: 'Brussels',
+    type: 'Room',
+    price: 90,
+    rating: 4.2,
+    isPremium: false,
+    isFavorite: false,
+    previewImage: 'img/room-brussels-01.jpg',
+    location: {
+      title: '',
+      lat: 50.846557,
+      lng: 4.351697,
+    }
+  },
+  {
+    id: '8',
+    title: 'Waterfront apartment in Speicherstadt',
+    city: 'Hamburg',
+    type: 'Apartment',
+    price: 175,
+    rating: 4.9,
+    isPremium: true,
+    isFavorite: true,
+    previewImage: 'img/apartment-hamburg-01.jpg',
+    location: {
+      title: '',
+      lat: 53.548828,
+      lng: 9.987170,
+    }
+  },
+  {
+    id: '9',
+    title: 'Luxury hotel room in MedienHafen',
+    city: 'Dusseldorf',
+    type: 'Hotel',
+    price: 220,
+    rating: 4.7,
+    isPremium: true,
+    isFavorite: false,
+    previewImage: 'img/hotel-dusseldorf-01.jpg',
+    location: {
+      title: '',
+      lat: 51.213270,
+      lng: 6.773320,
+    }
   }
 ];

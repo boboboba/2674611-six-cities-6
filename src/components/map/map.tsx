@@ -46,6 +46,10 @@ function Map(props: MapProps): JSX.Element {
           .addTo(markerLayer);
       });
 
+      if (map && points.length > 0) {
+        map.setView([points[0].lat, points[0].lng], map.getZoom());
+      }
+
       return () => {
         map.removeLayer(markerLayer);
       };

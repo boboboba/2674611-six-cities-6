@@ -1,8 +1,11 @@
-import {Offers} from '../../types/offer.ts';
+import {Offer, Offers} from '../../types/offer.ts';
 import OffersList from '../../components/offers-list/offers-list.tsx';
 import Map from '../../components/map/map.tsx';
 import {useState} from 'react';
 import {Point} from '../../types/map.ts';
+import {allCities} from '../../const.ts';
+import {useAppDispatch, useAppSelector} from '../../hooks';
+import {changeCity} from '../../store/action.ts';
 
 type MainProps = {
   offersCount: number;
@@ -11,6 +14,12 @@ type MainProps = {
 
 function MainPage({offersCount, offers} : MainProps) : JSX.Element {
   const [selectedPoint, serSelectedPoint] = useState<Point | null>(null);
+
+  const dispatch = useAppDispatch();
+  const currentCity = useAppSelector((state) => state.city);
+
+  const filteredOffers = offers.filter((offer: Offer) => (offer.city === currentCity));
+
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -47,36 +56,20 @@ function MainPage({offersCount, offers} : MainProps) : JSX.Element {
         <div className="tabs">
           <section className="locations container">
             <ul className="locations__list tabs__list">
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Paris</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Cologne</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Brussels</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item tabs__item--active">
-                  <span>Amsterdam</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Hamburg</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Dusseldorf</span>
-                </a>
-              </li>
+              {allCities.map((city) => (
+                <li key={city} className="locations__item">
+                  <a
+                    className={`locations__item-link tabs__item ${currentCity === city ? 'tabs__item--active' : ''}`}
+                    href="#"
+                    onClick={(evt) => {
+                      evt.preventDefault();
+                      dispatch(changeCity(city));
+                    }}
+                  >
+                    <span>{city}</span>
+                  </a>
+                </li>
+              ))}
             </ul>
           </section>
         </div>
@@ -100,13 +93,13 @@ function MainPage({offersCount, offers} : MainProps) : JSX.Element {
                   <li className="places__option" tabIndex={0}>Top rated first</li>
                 </ul>
               </form>
-              <OffersList offers={offers} onActiveOfferChange={
+              <OffersList offers={filteredOffers} onActiveOfferChange={
                 (offer) => serSelectedPoint(offer ? offer.location : null)
               }
               />
             </section>
             <div className="cities__right-section">
-              <Map points={offers.map((of) => of.location)} selectedPoint={selectedPoint}/>
+              <Map points={filteredOffers.map((of) => of.location)} selectedPoint={selectedPoint}/>
             </div>
           </div>
         </div>
