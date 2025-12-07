@@ -7,10 +7,10 @@ type FavoritesProps = {
 
 function Favorites({offers}: FavoritesProps): JSX.Element {
   const groupedOffers = offers.reduce<Record<string, Offers>>((acc, offer) => {
-    if (!acc[offer.city]) {
-      acc[offer.city] = [];
+    if (!acc[offer.city.name]) {
+      acc[offer.city.name] = [];
     }
-    acc[offer.city].push(offer);
+    acc[offer.city.name].push(offer);
     return acc;
   }, {});
 

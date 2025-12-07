@@ -1,4 +1,4 @@
-import { Offers } from '../types/offer.ts';
+import {Offers} from '../types/offer.ts';
 
 export const testOffers: Offers = [
   {

@@ -1,16 +1,44 @@
-import {Point} from './map.ts';
+export type City = {
+  name: string;
+  location: {
+    latitude: number;
+    longitude: number;
+    zoom: number;
+  };
+};
+
+export type Location = {
+  latitude: number;
+  longitude: number;
+  zoom: number;
+};
+
+export type Host = {
+  name: string;
+  avatarUrl: string;
+  isPro: boolean;
+};
 
 export type Offer = {
   id: string;
   title: string;
-  city: string;
   type: string;
   price: number;
-  rating: number;
-  isPremium: boolean;
+  city: City;
+  location: Location;
   isFavorite: boolean;
+  isPremium: boolean;
+  rating: number;
   previewImage: string;
-  location: Point;
+};
+
+export type FullOffer = Offer & {
+  description: string;
+  bedrooms: number;
+  goods: string[];
+  host: Host;
+  images: string[];
+  maxAdults: number;
 };
 
 export type Offers = Offer[];

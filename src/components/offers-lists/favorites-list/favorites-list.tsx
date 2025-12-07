@@ -5,7 +5,7 @@ type FavoritesListProps = {
   groupedOffers: Record<string, Offers>;
 };
 
-function FavoritesList({ groupedOffers }: FavoritesListProps): JSX.Element {
+function FavoritesList({groupedOffers}: FavoritesListProps): JSX.Element {
   return (
     <ul className="favorites__list">
       {Object.entries(groupedOffers).map(([city, cityOffers]) => (

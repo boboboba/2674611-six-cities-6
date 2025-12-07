@@ -1,14 +1,37 @@
-import {Offer} from '../../types/offer.ts';
 import ReviewForm from '../../components/review-form/review-form.tsx';
 import Map from '../../components/map/map.tsx';
 import NearPlacesOffersList from '../../components/offers-lists/near-places-offers-list/near-places-offers-list.tsx';
+import {useParams} from 'react-router-dom';
+import {useAppDispatch, useAppSelector} from '../../hooks';
+import {useEffect} from 'react';
+import {fetchNearbyOffers, fetchOfferById} from '../../store/api-action.ts';
+import LoadingScreen from '../../components/loading-screen/loading-screen.tsx';
 
-type OfferPageProps = {
-  offer: Offer;
-  otherOffers: Offer[];
-}
+function OfferPage(): JSX.Element {
+  const {id} = useParams();
+  const dispatch = useAppDispatch();
 
-function OfferPage({offer, otherOffers}: OfferPageProps): JSX.Element {
+  const offer = useAppSelector((state) => state.currentOffer);
+  const nearbyOffers = useAppSelector((state) => state.offers);
+  const isLoading = useAppSelector((state) => state.isLoading);
+
+  useEffect(() => {
+    if (id && (!offer || offer.id !== id)) {
+      dispatch(fetchOfferById(id));
+      dispatch(fetchNearbyOffers(id));
+      window.scrollTo(0, 0);
+    }
+  }, [dispatch, id]);
+
+
+  if (isLoading) {
+    return <LoadingScreen/>;
+  }
+
+  if (!offer) {
+    return <div>Offer not found</div>;
+  }
+
   return (
     <div className="page">
       <header className="header">
@@ -44,24 +67,11 @@ function OfferPage({offer, otherOffers}: OfferPageProps): JSX.Element {
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src={offer.previewImage} alt="Photo studio"/>
-              </div>
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/apartment-01.jpg" alt="Photo studio"/>
-              </div>
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/apartment-02.jpg" alt="Photo studio"/>
-              </div>
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/apartment-03.jpg" alt="Photo studio"/>
-              </div>
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/studio-01.jpg" alt="Photo studio"/>
-              </div>
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/apartment-01.jpg" alt="Photo studio"/>
-              </div>
+              {offer.images.map((image) => (
+                <div className="offer__image-wrapper" key={image}>
+                  <img className="offer__image" src={image} alt="Photo studio"/>
+                </div>
+              ))}
             </div>
           </div>
           <div className="offer__container container">
@@ -204,7 +214,7 @@ function OfferPage({offer, otherOffers}: OfferPageProps): JSX.Element {
             </div>
           </div>
           <Map
-            points={otherOffers.map((of) => of.location)}
+            locations={nearbyOffers.map((of) => of.location)}
             selectedPoint={null}
             mapType={'offer'}
           />
@@ -213,7 +223,7 @@ function OfferPage({offer, otherOffers}: OfferPageProps): JSX.Element {
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
             <NearPlacesOffersList
-              offers={otherOffers}
+              offers={nearbyOffers}
             />
           </section>
         </div>
