@@ -1,11 +1,8 @@
 import {Offers} from '../../types/offer.ts';
 import FavoritesList from '../../components/offers-lists/favorites-list/favorites-list.tsx';
 
-type FavoritesProps = {
-  offers: Offers;
-};
-
-function Favorites({offers}: FavoritesProps): JSX.Element {
+function Favorites(): JSX.Element {
+  const offers: Offers = [];
   const groupedOffers = offers.reduce<Record<string, Offers>>((acc, offer) => {
     if (!acc[offer.city.name]) {
       acc[offer.city.name] = [];

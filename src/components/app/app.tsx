@@ -5,16 +5,11 @@ import OfferPage from '../../pages/offer/offer-page.tsx';
 import FavoritesPage from '../../pages/favorites/favorites-page.tsx';
 import NotFoundPage from '../../pages/not-found/not-found-page.tsx';
 import PrivateRoute from '../private-route/private-route.tsx';
-import {Offers} from '../../types/offer.ts';
 import {useAppSelector} from '../../hooks';
 import {AuthorizationStatus} from '../../const.ts';
 import LoadingScreen from '../loading-screen/loading-screen.tsx';
 
-type AppProps = {
-  offers: Offers;
-}
-
-function App({offers}: AppProps): JSX.Element {
+function App(): JSX.Element {
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
   const isOffersDataLoading = useAppSelector((state) => state.isLoading);
 
@@ -35,7 +30,7 @@ function App({offers}: AppProps): JSX.Element {
             <PrivateRoute
               authorizationStatus={AuthorizationStatus.Auth}
             >
-              <FavoritesPage offers={offers}/>
+              <FavoritesPage/>
             </PrivateRoute>
           }
         />
