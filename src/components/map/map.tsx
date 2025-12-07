@@ -1,13 +1,13 @@
 import 'leaflet/dist/leaflet.css';
-import {Point, Points} from '../../types/map.ts';
 import leaflet, {layerGroup, Marker} from 'leaflet';
 import {useEffect, useRef} from 'react';
 import useMap from '../../hooks/useMap.ts';
+import {Location} from '../../types/offer.ts';
 
 type MapProps = {
   mapType?: 'offer' | 'city';
-  points: Points;
-  selectedPoint: Point | null;
+  locations: Location[];
+  selectedPoint: Location | null;
 };
 
 const defaultCustomIcon = leaflet.icon({
@@ -23,18 +23,19 @@ const currentCustomIcon = leaflet.icon({
 });
 
 function Map(props: MapProps): JSX.Element {
-  const {mapType, points, selectedPoint} = props;
+  const {mapType, locations, selectedPoint} = props;
 
   const mapRef = useRef(null);
-  const map = useMap(mapRef, points[0]);
+
+  const map = useMap(mapRef, locations[0]);
 
   useEffect(() => {
     if (map) {
       const markerLayer = layerGroup().addTo(map);
-      points.forEach((point) => {
+      locations.forEach((point) => {
         const marker = new Marker({
-          lat: point.lat,
-          lng: point.lng
+          lat: point.latitude,
+          lng: point.longitude
         });
 
         marker
@@ -47,15 +48,15 @@ function Map(props: MapProps): JSX.Element {
           .addTo(markerLayer);
       });
 
-      if (map && points.length > 0) {
-        map.setView([points[0].lat, points[0].lng], map.getZoom());
+      if (map && locations.length > 0) {
+        map.setView([locations[0].latitude, locations[0].longitude], map.getZoom());
       }
 
       return () => {
         map.removeLayer(markerLayer);
       };
     }
-  }, [map, points, selectedPoint]);
+  }, [map, locations, selectedPoint]);
 
 
   const mapClass = mapType === 'offer' ? 'offer__map map' : 'cities__map map';
@@ -64,7 +65,7 @@ function Map(props: MapProps): JSX.Element {
     <section
       ref={mapRef}
       className={mapClass}
-      style={{ backgroundImage: 'none' }}
+      style={{backgroundImage: 'none'}}
     />
   );
 }

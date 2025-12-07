@@ -1,24 +1,22 @@
-import {Offer, Offers} from '../../types/offer.ts';
+import {Location, Offer} from '../../types/offer.ts';
 import CitiesOffersList from '../../components/offers-lists/cities-offers-list/cities-offers-list.tsx';
 import Map from '../../components/map/map.tsx';
 import {useState} from 'react';
-import {Point} from '../../types/map.ts';
 import {allCities} from '../../const.ts';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {changeCity} from '../../store/action.ts';
 
-type MainProps = {
-  offersCount: number;
-  offers: Offers;
-}
 
-function MainPage({offersCount, offers} : MainProps) : JSX.Element {
-  const [selectedPoint, serSelectedPoint] = useState<Point | null>(null);
+function MainPage(): JSX.Element {
+  const [selectedPoint, serSelectedPoint] = useState<Location | null>(null);
 
   const dispatch = useAppDispatch();
-  const currentCity = useAppSelector((state) => state.city);
 
-  const filteredOffers = offers.filter((offer: Offer) => (offer.city === currentCity));
+  const currentCity = useAppSelector((state) => state.city);
+  const allOffers = useAppSelector((state) => state.offers);
+
+  const filteredOffers = allOffers.filter((offer: Offer) => (offer.city.name === currentCity));
+  const offersCount = filteredOffers.length;
 
   return (
     <div className="page page--gray page--main">
@@ -77,7 +75,7 @@ function MainPage({offersCount, offers} : MainProps) : JSX.Element {
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{offersCount} places to stay in Amsterdam</b>
+              <b className="places__found">{offersCount} places to stay in {currentCity}</b>
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
                 <span className="places__sorting-type" tabIndex={0}>
@@ -99,7 +97,7 @@ function MainPage({offersCount, offers} : MainProps) : JSX.Element {
               />
             </section>
             <div className="cities__right-section">
-              <Map points={filteredOffers.map((of) => of.location)} selectedPoint={selectedPoint}/>
+              <Map locations={filteredOffers.map((of) => of.location)} selectedPoint={selectedPoint}/>
             </div>
           </div>
         </div>

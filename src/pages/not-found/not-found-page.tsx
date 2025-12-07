@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 function NotFoundPage() {
   return (
@@ -12,8 +12,8 @@ function NotFoundPage() {
       padding: '20px'
     }}
     >
-      <h1 style={{ fontSize: '4rem', marginBottom: '1rem' }}>404</h1>
-      <h2 style={{ marginBottom: '2rem' }}>Page Not Found</h2>
+      <h1 style={{fontSize: '4rem', marginBottom: '1rem'}}>404</h1>
+      <h2 style={{marginBottom: '2rem'}}>Page Not Found</h2>
       <Link
         to="/"
         style={{

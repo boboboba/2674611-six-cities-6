@@ -6,7 +6,7 @@ type OffersListProps = {
   onActiveOfferChange: (offer: Offer | null) => void;
 }
 
-function CitiesOffersList({ offers, onActiveOfferChange }: OffersListProps): JSX.Element {
+function CitiesOffersList({offers, onActiveOfferChange}: OffersListProps): JSX.Element {
   const handleMouseEnter = (offer: Offer) => {
     onActiveOfferChange(offer);
   };

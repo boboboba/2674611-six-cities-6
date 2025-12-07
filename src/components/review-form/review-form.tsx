@@ -1,4 +1,4 @@
-import {useState, FormEvent, ChangeEvent} from 'react';
+import {ChangeEvent, FormEvent, useState} from 'react';
 
 function ReviewForm(): JSX.Element {
   const [formData, setFormData] = useState({
