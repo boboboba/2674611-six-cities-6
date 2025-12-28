@@ -1,7 +1,7 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {AppDispatch, State} from '../../types/state.ts';
 import {AxiosInstance} from 'axios';
-import {Review} from '../../types/review.ts';
+import {Review, SendReviewData} from '../../types/review.ts';
 
 export const fetchReviews = createAsyncThunk<
   Review[],
@@ -18,14 +18,16 @@ export const fetchReviews = createAsyncThunk<
   });
 
 export const sendReview = createAsyncThunk<
-  void,
-  string,
+  Review,
+  SendReviewData,
   {
     dispatch: AppDispatch;
     state: State;
     extra: AxiosInstance;
   }
 >('reviews/sendReviewByOfferId',
-  async (offerId, {extra: api}) => {
-    await api.post(`/comments/${offerId}`);
+  async ({offerId, comment, rating}, {extra: api}) => {
+    const {data} = await api.post<Review>(`/comments/${offerId}`,
+      { rating, comment });
+    return data;
   });

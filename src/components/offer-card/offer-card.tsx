@@ -1,7 +1,7 @@
 import {Link} from 'react-router-dom';
 import {Offer} from '../../types/offer.ts';
 import {memo} from 'react';
-import {getRatingWidth} from "../../services/utils.ts";
+import {getRatingWidth} from '../../services/utils.ts';
 
 type OfferCardProps = {
   offer: Offer;

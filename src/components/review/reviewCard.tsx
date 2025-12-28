@@ -1,5 +1,5 @@
-import {formatReviewDate, getRatingWidth} from "../../services/utils.ts";
-import {Review} from "../../types/review.ts";
+import {formatReviewDate, getRatingWidth} from '../../services/utils.ts';
+import {Review} from '../../types/review.ts';
 
 type ReviewProps = {
   review: Review;

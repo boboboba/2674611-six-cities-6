@@ -13,6 +13,7 @@ export type ReviewUser = {
 };
 
 export type SendReviewData = {
+  offerId: string;
   comment: string;
   rating: number;
 }

@@ -8,8 +8,8 @@ import {fetchNearbyOffers, fetchOfferById} from '../../store/api-actions/offers.
 import LoadingScreen from '../../components/loading-screen/loading-screen.tsx';
 import Header from '../../components/header/header.tsx';
 import {NameSpace} from '../../const.ts';
-import ReviewList from "../../components/review-list/review-list.tsx";
-import {fetchReviews} from "../../store/api-actions/review.ts";
+import ReviewList from '../../components/review-list/review-list.tsx';
+import {fetchReviews} from '../../store/api-actions/review.ts';
 
 function OfferPage(): JSX.Element {
   const {id} = useParams();
@@ -138,7 +138,7 @@ function OfferPage(): JSX.Element {
               <section className="offer__reviews reviews">
                 <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{reviews.length}</span></h2>
                 <ReviewList reviews={reviews}/>
-                <ReviewForm/>
+                <ReviewForm offerId={id!}/>
               </section>
             </div>
           </div>

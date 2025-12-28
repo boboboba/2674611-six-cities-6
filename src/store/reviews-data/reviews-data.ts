@@ -1,7 +1,7 @@
-import {Review} from "../../types/review.ts";
-import {createSlice} from "@reduxjs/toolkit";
-import {NameSpace} from "../../const.ts";
-import {fetchReviews} from "../api-actions/review.ts";
+import {Review} from '../../types/review.ts';
+import {createSlice} from '@reduxjs/toolkit';
+import {NameSpace} from '../../const.ts';
+import {fetchReviews} from '../api-actions/review.ts';
 
 
 type ReviewsDataState = {
