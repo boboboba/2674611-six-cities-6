@@ -3,6 +3,9 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import CitiesOffersList from './cities-offers-list';
 import { Offer } from '../../../types/offer';
+import {configureMockStore} from '@jedmao/redux-mock-store';
+import {AuthorizationStatus, NameSpace} from '../../../const.ts';
+import {Provider} from 'react-redux';
 
 const mockOffers: Offer[] = [
   {
@@ -36,8 +39,22 @@ const mockOffers: Offer[] = [
     previewImage: 'img2.jpg'
   }
 ];
+const mockStore = configureMockStore();
 
 describe('Component: CitiesOffersList', () => {
+  const store = mockStore({
+    [NameSpace.User]: {
+      authorizationStatus: AuthorizationStatus.Auth,
+      userData: null
+    },
+    [NameSpace.Offers]: {
+      offers: [],
+      currentOffer: null,
+      nearbyOffers: [],
+      isLoading: false,
+      favoriteOffers: []
+    }
+  });
   const mockOnActiveOfferChange = vi.fn();
 
   beforeEach(() => {
@@ -46,13 +63,14 @@ describe('Component: CitiesOffersList', () => {
 
   it('should render list of offers', () => {
     render(
-      <MemoryRouter>
-        <CitiesOffersList
-          offers={mockOffers}
-          onActiveOfferChange={mockOnActiveOfferChange}
-        />
-      </MemoryRouter>
-    );
+      <Provider store={store}>
+        <MemoryRouter>
+          <CitiesOffersList
+            offers={mockOffers}
+            onActiveOfferChange={mockOnActiveOfferChange}
+          />
+        </MemoryRouter>
+      </Provider>);
 
     expect(screen.getByText('Offer 1')).toBeInTheDocument();
     expect(screen.getByText('Offer 2')).toBeInTheDocument();
@@ -61,12 +79,14 @@ describe('Component: CitiesOffersList', () => {
 
   it('should render empty list when no offers', () => {
     render(
-      <MemoryRouter>
-        <CitiesOffersList
-          offers={[]}
-          onActiveOfferChange={mockOnActiveOfferChange}
-        />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <CitiesOffersList
+            offers={[]}
+            onActiveOfferChange={mockOnActiveOfferChange}
+          />
+        </MemoryRouter>
+      </Provider>
     );
 
     expect(screen.queryByText('Offer 1')).not.toBeInTheDocument();
@@ -75,12 +95,14 @@ describe('Component: CitiesOffersList', () => {
 
   it('should call onActiveOfferChange with offer when mouse enters offer card', async () => {
     render(
-      <MemoryRouter>
-        <CitiesOffersList
-          offers={mockOffers}
-          onActiveOfferChange={mockOnActiveOfferChange}
-        />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <CitiesOffersList
+            offers={mockOffers}
+            onActiveOfferChange={mockOnActiveOfferChange}
+          />
+        </MemoryRouter>
+      </Provider>
     );
 
     const firstOffer = screen.getByText('Offer 1').closest('article');
@@ -95,12 +117,14 @@ describe('Component: CitiesOffersList', () => {
 
   it('should call onActiveOfferChange with null when mouse leaves offer card', async () => {
     render(
-      <MemoryRouter>
-        <CitiesOffersList
-          offers={mockOffers}
-          onActiveOfferChange={mockOnActiveOfferChange}
-        />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <CitiesOffersList
+            offers={mockOffers}
+            onActiveOfferChange={mockOnActiveOfferChange}
+          />
+        </MemoryRouter>
+      </Provider>
     );
 
     const firstOffer = screen.getByText('Offer 1').closest('article');
@@ -116,12 +140,14 @@ describe('Component: CitiesOffersList', () => {
 
   it('should have correct CSS classes', () => {
     render(
-      <MemoryRouter>
-        <CitiesOffersList
-          offers={mockOffers}
-          onActiveOfferChange={mockOnActiveOfferChange}
-        />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <CitiesOffersList
+            offers={mockOffers}
+            onActiveOfferChange={mockOnActiveOfferChange}
+          />
+        </MemoryRouter>
+      </Provider>
     );
 
     const list = screen.getByText('Offer 1').closest('div.cities__places-list');
@@ -133,12 +159,14 @@ describe('Component: CitiesOffersList', () => {
 
   it('should render each offer with correct key', () => {
     render(
-      <MemoryRouter>
-        <CitiesOffersList
-          offers={mockOffers}
-          onActiveOfferChange={mockOnActiveOfferChange}
-        />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <CitiesOffersList
+            offers={mockOffers}
+            onActiveOfferChange={mockOnActiveOfferChange}
+          />
+        </MemoryRouter>
+      </Provider>
     );
 
     const articles = screen.getAllByRole('article');

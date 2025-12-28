@@ -2,6 +2,9 @@ import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { OfferCard } from './offer-card';
 import { Offer } from '../../types/offer';
+import {Provider} from 'react-redux';
+import {AuthorizationStatus, NameSpace} from '../../const.ts';
+import {configureMockStore} from '@jedmao/redux-mock-store';
 
 const mockOffer: Offer = {
   id: '1',
@@ -26,13 +29,30 @@ const mockOffer: Offer = {
   rating: 4.8,
   previewImage: 'img/apartment-01.jpg',
 };
+const mockStore = configureMockStore();
 
 describe('Component: OfferCard', () => {
+  const store = mockStore({
+    [NameSpace.User]: {
+      authorizationStatus: AuthorizationStatus.Auth,
+      userData: null
+    },
+    [NameSpace.Offers]: {
+      offers: [],
+      currentOffer: null,
+      nearbyOffers: [],
+      isLoading: false,
+      favoriteOffers: []
+    }
+  });
   it('should render correctly for cities card type', () => {
     render(
-      <BrowserRouter>
-        <OfferCard offer={mockOffer} cardType="cities" />
-      </BrowserRouter>
+      <Provider store={store}>
+
+        <BrowserRouter>
+          <OfferCard offer={mockOffer} cardType="cities" />
+        </BrowserRouter>
+      </Provider>
     );
 
     expect(screen.getByText('Beautiful & luxurious apartment at great location')).toBeInTheDocument();
@@ -45,9 +65,11 @@ describe('Component: OfferCard', () => {
 
   it('should render correctly for near-places card type', () => {
     render(
-      <BrowserRouter>
-        <OfferCard offer={mockOffer} cardType="near-places" />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <OfferCard offer={mockOffer} cardType="near-places" />
+        </BrowserRouter>
+      </Provider>
     );
 
     expect(screen.getByText('Beautiful & luxurious apartment at great location')).toBeInTheDocument();
@@ -56,9 +78,11 @@ describe('Component: OfferCard', () => {
 
   it('should render correctly for favorites card type', () => {
     render(
-      <BrowserRouter>
-        <OfferCard offer={mockOffer} cardType="favorites" />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <OfferCard offer={mockOffer} cardType="favorites" />
+        </BrowserRouter>
+      </Provider>
     );
 
     expect(screen.getByText('Beautiful & luxurious apartment at great location')).toBeInTheDocument();
@@ -69,9 +93,11 @@ describe('Component: OfferCard', () => {
     const premiumOffer = { ...mockOffer, isPremium: true };
 
     render(
-      <BrowserRouter>
-        <OfferCard offer={premiumOffer} cardType="cities" />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <OfferCard offer={premiumOffer} cardType="cities" />
+        </BrowserRouter>
+      </Provider>
     );
 
     expect(screen.getByText('Premium')).toBeInTheDocument();
@@ -81,9 +107,11 @@ describe('Component: OfferCard', () => {
     const nonPremiumOffer = { ...mockOffer, isPremium: false };
 
     render(
-      <BrowserRouter>
-        <OfferCard offer={nonPremiumOffer} cardType="cities" />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <OfferCard offer={nonPremiumOffer} cardType="cities" />
+        </BrowserRouter>
+      </Provider>
     );
 
     expect(screen.queryByText('Premium')).not.toBeInTheDocument();
@@ -93,9 +121,11 @@ describe('Component: OfferCard', () => {
     const favoriteOffer = { ...mockOffer, isFavorite: true };
 
     render(
-      <BrowserRouter>
-        <OfferCard offer={favoriteOffer} cardType="cities" />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <OfferCard offer={favoriteOffer} cardType="cities" />
+        </BrowserRouter>
+      </Provider>
     );
 
     const bookmarkButton = screen.getByRole('button');
@@ -106,9 +136,11 @@ describe('Component: OfferCard', () => {
     const nonFavoriteOffer = { ...mockOffer, isFavorite: false };
 
     render(
-      <BrowserRouter>
-        <OfferCard offer={nonFavoriteOffer} cardType="cities" />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <OfferCard offer={nonFavoriteOffer} cardType="cities" />
+        </BrowserRouter>
+      </Provider>
     );
 
     const bookmarkButton = screen.getByRole('button');
@@ -117,9 +149,11 @@ describe('Component: OfferCard', () => {
 
   it('should render correct image dimensions for favorites card type', () => {
     render(
-      <BrowserRouter>
-        <OfferCard offer={mockOffer} cardType="favorites" />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <OfferCard offer={mockOffer} cardType="favorites" />
+        </BrowserRouter>
+      </Provider>
     );
 
     const image = screen.getByAltText('Place image');
@@ -129,9 +163,11 @@ describe('Component: OfferCard', () => {
 
   it('should render correct image dimensions for cities card type', () => {
     render(
-      <BrowserRouter>
-        <OfferCard offer={mockOffer} cardType="cities" />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <OfferCard offer={mockOffer} cardType="cities" />
+        </BrowserRouter>
+      </Provider>
     );
 
     const image = screen.getByAltText('Place image');
@@ -141,9 +177,11 @@ describe('Component: OfferCard', () => {
 
   it('should have correct link to offer page', () => {
     render(
-      <BrowserRouter>
-        <OfferCard offer={mockOffer} cardType="cities" />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <OfferCard offer={mockOffer} cardType="cities" />
+        </BrowserRouter>
+      </Provider>
     );
 
     const link = screen.getByRole('link', { name: /Beautiful & luxurious apartment at great location/i });
@@ -152,9 +190,11 @@ describe('Component: OfferCard', () => {
 
   it('should apply correct CSS classes for different card types', () => {
     const { container } = render(
-      <BrowserRouter>
-        <OfferCard offer={mockOffer} cardType="cities" />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <OfferCard offer={mockOffer} cardType="cities" />
+        </BrowserRouter>
+      </Provider>
     );
 
     const article = container.querySelector('article');

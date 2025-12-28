@@ -1,7 +1,10 @@
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {Offer} from '../../types/offer.ts';
 import {memo} from 'react';
 import {getRatingWidth} from '../../services/utils.ts';
+import {useAppDispatch, useAppSelector} from '../../hooks';
+import { toggleFavorite } from '../../store/api-actions/favorites.ts';
+import {AuthorizationStatus, NameSpace} from '../../const.ts';
 
 type OfferCardProps = {
   offer: Offer;
@@ -11,14 +14,29 @@ type OfferCardProps = {
 }
 
 function OfferCardComponent(props: OfferCardProps): JSX.Element {
-  const offer = props.offer;
-  const cardType = props.cardType;
+  const { offer, cardType, onMouseEnter, onMouseLeave } = props;
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const authorizationStatus = useAppSelector((state) => state[NameSpace.User].authorizationStatus);
+
+
+  const handleFavoriteClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    if (authorizationStatus !== AuthorizationStatus.Auth) {
+      navigate('/login');
+      return;
+    }
+    dispatch(toggleFavorite({
+      offerId: offer.id,
+      status: offer.isFavorite ? 0 : 1
+    }));
+  };
 
   return (
     <article
       className={`${cardType}__card place-card`}
-      onMouseEnter={props.onMouseEnter}
-      onMouseLeave={props.onMouseLeave}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
       {offer.isPremium && (
         <div className="place-card__mark">
@@ -47,6 +65,7 @@ function OfferCardComponent(props: OfferCardProps): JSX.Element {
               offer.isFavorite ? 'place-card__bookmark-button--active' : ''
             }`}
             type="button"
+            onClick={handleFavoriteClick}
           >
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>

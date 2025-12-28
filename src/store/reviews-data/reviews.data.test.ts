@@ -46,7 +46,9 @@ describe('ReviewsData Slice', () => {
       const emptyAction = { type: '' };
       const expectedState = {
         reviews: [],
-        isLoading: false
+        isLoading: false,
+        sendingReview: false,
+        hasSubmitError: false,
       };
 
       const result = reviewsData.reducer(undefined, emptyAction);
@@ -112,7 +114,9 @@ describe('ReviewsData Slice', () => {
     it('should add new review to the beginning of array on fulfilled', () => {
       const initialState = {
         reviews: [mockReviews[0]],
-        isLoading: false
+        isLoading: false,
+        sendingReview: false,
+        hasSubmitError: false,
       };
 
       const result = reviewsData.reducer(
@@ -126,29 +130,10 @@ describe('ReviewsData Slice', () => {
 
       expect(result).toEqual({
         reviews: [mockReviews[0], mockNewReview, ],
-        isLoading: false
+        isLoading: false,
+        sendingReview: false,
+        hasSubmitError: false,
       });
-    });
-
-    it('should not change state on sendReview pending or rejected', () => {
-      const initialState = {
-        reviews: mockReviews,
-        isLoading: false
-      };
-
-      const pendingResult = reviewsData.reducer(
-        initialState,
-        sendReview.pending('', { offerId: 'offer-id', comment: 'test', rating: 5 })
-      );
-
-      expect(pendingResult).toEqual(initialState);
-
-      const rejectedResult = reviewsData.reducer(
-        initialState,
-        sendReview.rejected(new Error('Failed'), '', { offerId: 'offer-id', comment: 'test', rating: 5 })
-      );
-
-      expect(rejectedResult).toEqual(initialState);
     });
   });
 

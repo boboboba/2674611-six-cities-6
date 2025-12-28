@@ -37,10 +37,12 @@ function Map(props: MapProps): JSX.Element {
           lat: point.latitude,
           lng: point.longitude
         });
-
+        const isSelected = selectedPoint !== undefined &&
+          point.latitude === selectedPoint?.latitude &&
+          point.longitude === selectedPoint?.longitude;
         marker
           .setIcon(
-            selectedPoint !== undefined && point === selectedPoint
+            isSelected
               ? currentCustomIcon
               :
               defaultCustomIcon

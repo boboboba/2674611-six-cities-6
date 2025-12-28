@@ -11,6 +11,7 @@ import {AuthorizationStatus, NameSpace} from '../../const.ts';
 import ReviewList from '../../components/review-list/review-list.tsx';
 import {fetchReviews} from '../../store/api-actions/review.ts';
 import NotFoundPage from '../not-found/not-found-page.tsx';
+import {getRatingWidth} from '../../services/utils.ts';
 
 function OfferPage(): JSX.Element {
   const {id} = useParams();
@@ -20,7 +21,12 @@ function OfferPage(): JSX.Element {
   const nearbyOffers = useAppSelector((state) => state[NameSpace.Offers].offers);
   const isOfferLoading = useAppSelector((state) => state[NameSpace.Offers].isLoading);
 
-  const reviews = useAppSelector((state) => state[NameSpace.Reviews].reviews);
+  const sortedSlicedReviews = useAppSelector((state) => {
+    const reviews = state[NameSpace.Reviews].reviews;
+    return [...reviews]
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, 10);
+  });
 
   const authorizationStatus = useAppSelector((state) => state[NameSpace.User].authorizationStatus);
 
@@ -53,7 +59,7 @@ function OfferPage(): JSX.Element {
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              {offer.images.map((image) => (
+              {offer.images.slice(0, 6).map((image) => (
                 <div className="offer__image-wrapper" key={image}>
                   <img className="offer__image" src={image} alt="Photo studio"/>
                 </div>
@@ -85,7 +91,7 @@ function OfferPage(): JSX.Element {
               </div>
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
-                  <span style={{width: `${(offer.rating / 5) * 100}%`}}></span>
+                  <span style={{width: getRatingWidth(offer.rating)}}></span>
                   <span className="visually-hidden">Rating</span>
                 </div>
                 <span className="offer__rating-value rating__value">{offer.rating}</span>
@@ -95,10 +101,10 @@ function OfferPage(): JSX.Element {
                   {offer.type}
                 </li>
                 <li className="offer__feature offer__feature--bedrooms">
-                  {offer.bedrooms} Bedrooms
+                  {offer.bedrooms} {offer.bedrooms === 1 ? 'Bedroom' : 'Bedrooms'}
                 </li>
                 <li className="offer__feature offer__feature--adults">
-                  Max {offer.maxAdults} adults
+                  Max {offer.maxAdults} {offer.maxAdults === 1 ? 'adult' : 'adults'}
                 </li>
               </ul>
               <div className="offer__price">
@@ -139,8 +145,8 @@ function OfferPage(): JSX.Element {
                 </div>
               </div>
               <section className="offer__reviews reviews">
-                <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{reviews.length}</span></h2>
-                <ReviewList reviews={reviews}/>
+                <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{sortedSlicedReviews.length}</span></h2>
+                <ReviewList reviews={sortedSlicedReviews}/>
                 {authorizationStatus === AuthorizationStatus.Auth ? (
                   <ReviewForm offerId={id!}/>
                 ) : null}
@@ -148,8 +154,8 @@ function OfferPage(): JSX.Element {
             </div>
           </div>
           <Map
-            locations={nearbyOffers.map((of) => of.location)}
-            selectedPoint={null}
+            locations={nearbyOffers.slice(0, 4).map((of) => of.location)}
+            selectedPoint={offer.location}
             mapType={'offer'}
           />
         </section>

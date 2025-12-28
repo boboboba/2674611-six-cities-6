@@ -2,6 +2,9 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import FavoritesList from './favorites-list';
 import { Offer } from '../../../types/offer';
+import {Provider} from 'react-redux';
+import {configureMockStore} from '@jedmao/redux-mock-store';
+import {AuthorizationStatus, NameSpace} from '../../../const.ts';
 
 const mockGroupedOffers: Record<string, Offer[]> = {
   'Paris': [
@@ -45,13 +48,28 @@ const mockGroupedOffers: Record<string, Offer[]> = {
     }
   ]
 };
-
+const mockStore = configureMockStore();
 describe('Component: FavoritesList', () => {
+  const store = mockStore({
+    [NameSpace.User]: {
+      authorizationStatus: AuthorizationStatus.Auth,
+      userData: null
+    },
+    [NameSpace.Offers]: {
+      offers: [],
+      currentOffer: null,
+      nearbyOffers: [],
+      isLoading: false,
+      favoriteOffers: []
+    }
+  });
   it('should render grouped offers by city', () => {
     render(
-      <MemoryRouter>
-        <FavoritesList groupedOffers={mockGroupedOffers} />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <FavoritesList groupedOffers={mockGroupedOffers} />
+        </MemoryRouter>
+      </Provider>
     );
 
     expect(screen.getByText('Paris')).toBeInTheDocument();
@@ -63,9 +81,11 @@ describe('Component: FavoritesList', () => {
 
   it('should render empty list when no grouped offers', () => {
     render(
-      <MemoryRouter>
-        <FavoritesList groupedOffers={{}} />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <FavoritesList groupedOffers={{}} />
+        </MemoryRouter>
+      </Provider>
     );
 
     expect(screen.queryByText('Paris')).not.toBeInTheDocument();
@@ -74,9 +94,11 @@ describe('Component: FavoritesList', () => {
 
   it('should render correct number of city sections', () => {
     render(
-      <MemoryRouter>
-        <FavoritesList groupedOffers={mockGroupedOffers} />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <FavoritesList groupedOffers={mockGroupedOffers} />
+        </MemoryRouter>
+      </Provider>
     );
 
     const citySections = screen.getAllByRole('listitem');
@@ -85,9 +107,11 @@ describe('Component: FavoritesList', () => {
 
   it('should render offers for each city', () => {
     render(
-      <MemoryRouter>
-        <FavoritesList groupedOffers={mockGroupedOffers} />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <FavoritesList groupedOffers={mockGroupedOffers} />
+        </MemoryRouter>
+      </Provider>
     );
 
     const parisOffers = screen.getAllByText(/Paris Offer/);
@@ -99,9 +123,11 @@ describe('Component: FavoritesList', () => {
 
   it('should have correct CSS classes', () => {
     const { container } = render(
-      <MemoryRouter>
-        <FavoritesList groupedOffers={mockGroupedOffers} />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <FavoritesList groupedOffers={mockGroupedOffers} />
+        </MemoryRouter>
+      </Provider>
     );
 
     const list = container.querySelector('.favorites__list');
@@ -116,9 +142,11 @@ describe('Component: FavoritesList', () => {
 
   it('should pass correct cardType to OfferCard components', () => {
     const { container } = render(
-      <MemoryRouter>
-        <FavoritesList groupedOffers={mockGroupedOffers} />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <FavoritesList groupedOffers={mockGroupedOffers} />
+        </MemoryRouter>
+      </Provider>
     );
 
     const offerCards = container.querySelectorAll('article');
@@ -129,9 +157,11 @@ describe('Component: FavoritesList', () => {
 
   it('should render city names as links', () => {
     render(
-      <MemoryRouter>
-        <FavoritesList groupedOffers={mockGroupedOffers} />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <FavoritesList groupedOffers={mockGroupedOffers} />
+        </MemoryRouter>
+      </Provider>
     );
 
     const cityLinks = screen.getAllByRole('link', { name: /Paris|Cologne/ });

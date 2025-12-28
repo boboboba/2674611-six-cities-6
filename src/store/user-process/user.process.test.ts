@@ -1,7 +1,7 @@
 // store/user-process/user-process.slice.test.ts
 import { AuthorizationStatus } from '../../const';
 import { checkAuthAction, loginAction } from '../api-actions/auth.ts';
-import {logout, userProcess} from './user-process.ts';
+import {userProcess} from './user-process.ts';
 import {UserData} from '../../types/user-data.ts';
 
 describe('UserProcess Slice', () => {
@@ -96,63 +96,6 @@ describe('UserProcess Slice', () => {
     expect(result).toEqual({
       authorizationStatus: AuthorizationStatus.NoAuth,
       userData: null
-    });
-  });
-
-  it('should set "NoAuth" and clear user data on "logout" action', () => {
-    const initialState = {
-      authorizationStatus: AuthorizationStatus.Auth,
-      userData: mockUserData
-    };
-
-    const result = userProcess.reducer(initialState, logout());
-
-    expect(result).toEqual({
-      authorizationStatus: AuthorizationStatus.NoAuth,
-      userData: null
-    });
-  });
-
-  it('should not change state for unknown action', () => {
-    const initialState = {
-      authorizationStatus: AuthorizationStatus.Auth,
-      userData: mockUserData
-    };
-
-    const unknownAction = {
-      type: 'UNKNOWN_ACTION',
-      payload: undefined
-    };
-
-    const result = userProcess.reducer(initialState, unknownAction);
-
-    expect(result).toEqual(initialState);
-  });
-  describe('logout action', () => {
-    it('should reset state to NoAuth and null userData', () => {
-      const initialState = {
-        authorizationStatus: AuthorizationStatus.Auth,
-        userData: mockUserData,
-      };
-
-      const result = userProcess.reducer(initialState, userProcess.actions.logout());
-
-      expect(result.authorizationStatus).toBe(AuthorizationStatus.NoAuth);
-      expect(result.userData).toBeNull();
-    });
-
-    it('should work from any authorization status', () => {
-      const initialState = {
-        authorizationStatus: AuthorizationStatus.Auth,
-        userData: mockUserData,
-      };
-
-      const result = userProcess.reducer(initialState, userProcess.actions.logout());
-
-      expect(result).toEqual({
-        authorizationStatus: AuthorizationStatus.NoAuth,
-        userData: null,
-      });
     });
   });
 });

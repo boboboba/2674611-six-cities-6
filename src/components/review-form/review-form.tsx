@@ -1,6 +1,8 @@
-import {ChangeEvent, FormEvent, useState} from 'react';
-import {useAppDispatch} from '../../hooks';
+import {ChangeEvent, FormEvent, useEffect, useState} from 'react';
+import {useAppDispatch, useAppSelector} from '../../hooks';
 import {sendReview} from '../../store/api-actions/review.ts';
+import {NameSpace} from '../../const.ts';
+import {clearError} from '../../store/reviews-data/reviews-data.ts';
 
 type ReviewFormProps = {
   offerId: string;
@@ -13,6 +15,13 @@ function ReviewForm({offerId}: ReviewFormProps): JSX.Element {
   });
 
   const dispatch = useAppDispatch();
+
+  const sendingReview = useAppSelector((state) => state[NameSpace.Reviews].sendingReview);
+  const hasSubmitError = useAppSelector((state) => state[NameSpace.Reviews].hasSubmitError);
+
+  useEffect(() => () => {
+    dispatch(clearError());
+  }, [dispatch]);
 
   const handleRatingChange = (evt: ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -36,10 +45,9 @@ function ReviewForm({offerId}: ReviewFormProps): JSX.Element {
       rating: formData.rating,
       comment: formData.comment
     }));
-    setFormData({ rating: 0, comment: '' });
   };
 
-  const isFormValid = formData.rating > 0 && formData.comment.length >= 50;
+  const isFormValid = formData.rating > 0 && formData.comment.length >= 50 && formData.comment.length <= 300;
 
   return (
     <form className="reviews__form form" action="#" method="post" onSubmit={handleSubmit}>
@@ -132,6 +140,20 @@ function ReviewForm({offerId}: ReviewFormProps): JSX.Element {
         onChange={handleCommentChange}
       />
 
+      {hasSubmitError && (
+        <div className="reviews__error" style={{
+          color: '#ff6b6b',
+          backgroundColor: '#fff5f5',
+          padding: '10px',
+          borderRadius: '4px',
+          marginBottom: '15px',
+          border: '1px solid #ffd6d6'
+        }}
+        >
+          ⚠️ Failed to submit review. Please try again.
+        </div>
+      )}
+
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
           To submit review please make sure to set <span className="reviews__star">rating</span> and
@@ -140,7 +162,7 @@ function ReviewForm({offerId}: ReviewFormProps): JSX.Element {
         <button
           className="reviews__submit form__submit button"
           type="submit"
-          disabled={!isFormValid}
+          disabled={!isFormValid || sendingReview}
         >
           Submit
         </button>

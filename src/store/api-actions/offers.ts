@@ -14,7 +14,7 @@ export const fetchOffers = createAsyncThunk<
   }
 >('offers/fetchOffers',
   async (_arg, {extra: api}) => {
-    const {data} = await api.get<Offers>('/offers');
+    const {data} = await api.get<Offers>(`${APIRoute.Offers}`);
     return data;
   });
 

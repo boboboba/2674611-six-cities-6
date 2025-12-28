@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../hooks';
 import {AuthorizationStatus, NameSpace} from '../../const';
 import React from 'react';
-import {logout} from '../../store/user-process/user-process.ts';
+import {logoutAction} from '../../store/api-actions/auth.ts';
 
 function Header(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -14,7 +14,7 @@ function Header(): JSX.Element {
 
   const handleLogoutClick = (evt: React.MouseEvent) => {
     evt.preventDefault();
-    dispatch(logout());
+    dispatch(logoutAction());
   };
 
   const isAuth = authorizationStatus === AuthorizationStatus.Auth;
@@ -44,7 +44,7 @@ function Header(): JSX.Element {
                   <li className="header__nav-item user">
                     <Link
                       className="header__nav-link header__nav-link--profile"
-                      to="favorites"
+                      to="/favorites"
                     >
                       <div className="header__avatar-wrapper user__avatar-wrapper">
                         <img

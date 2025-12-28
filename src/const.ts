@@ -17,6 +17,8 @@ export const enum APIRoute {
   Login = 'login',
   Offers = 'offers',
   Comments = 'comments',
+  Logout = 'logout',
+  Favorite = 'favorite',
 }
 
 export enum NameSpace {
@@ -24,4 +26,5 @@ export enum NameSpace {
   Offers = 'OFFERS',
   Reviews = 'REVIEWS',
   User = 'USER',
+  Favorite = 'FAVORITE',
 }
