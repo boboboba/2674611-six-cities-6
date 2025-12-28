@@ -15,7 +15,6 @@ import {AuthData} from '../../types/auth-data.ts';
 const extractActionsTypes = (actions: Action<string>[]): string[] =>
   actions.map(({ type }) => type);
 
-// Мок-данные
 const mockUserData: UserData = {
   email: 'test@test.com',
   token: 'secret-token',
@@ -29,7 +28,6 @@ const mockAuthData: AuthData = {
   password: 'password123'
 };
 
-// Тип для dispatch как в примере
 type AppThunkDispatch = ThunkDispatch<State, ReturnType<typeof createAPI>, Action<string>>;
 
 describe('Async actions for user', () => {
@@ -37,18 +35,17 @@ describe('Async actions for user', () => {
   const mockAxiosAdapter = new MockAdapter(axios);
   const middleware = [thunk.withExtraArgument(axios)];
 
-  // Создаем mock store как в примере
   const mockStoreCreator = configureMockStore<State, Action<string>, AppThunkDispatch>(middleware);
   let store: ReturnType<typeof mockStoreCreator>;
 
   beforeEach(() => {
-    // Инициализируем store с минимальным состоянием как в примере
     store = mockStoreCreator({
       USER: {
         userData: null,
         authorizationStatus: AuthorizationStatus.Unknown
       }
     });
+    mockAxiosAdapter.reset();
   });
 
   describe('checkAuthAction', () => {
@@ -112,7 +109,7 @@ describe('Async actions for user', () => {
     it('should call saveToken with the received token', async () => {
       mockAxiosAdapter.onPost(APIRoute.Login).reply(200, mockUserData);
 
-      const mockSaveToken = jest.spyOn(tokenStorage, 'saveToken');
+      const mockSaveToken = vi.spyOn(tokenStorage, 'saveToken');
 
       await store.dispatch(loginAction(mockAuthData));
 
@@ -138,7 +135,7 @@ describe('Async actions for user', () => {
     it('should not call saveToken when login fails', async () => {
       mockAxiosAdapter.onPost(APIRoute.Login).reply(400);
 
-      const mockSaveToken = jest.spyOn(tokenStorage, 'saveToken');
+      const mockSaveToken = vi.spyOn(tokenStorage, 'saveToken');
 
       await store.dispatch(loginAction(mockAuthData));
 
@@ -165,7 +162,10 @@ describe('Async actions for user', () => {
       await store.dispatch(loginAction(mockAuthData));
 
       const actions = store.getActions();
-      const fulfilledAction = actions.find((action) => action.type === checkAuthAction.fulfilled.type) as PayloadAction<UserData>;
+
+      const fulfilledAction = actions.find(
+        (action) => action.type === loginAction.fulfilled.type
+      ) as PayloadAction<UserData>;
 
       expect(fulfilledAction?.payload).toEqual({
         email: mockUserData.email,

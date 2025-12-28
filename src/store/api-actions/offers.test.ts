@@ -99,7 +99,7 @@ describe('Offers async actions', () => {
       await store.dispatch(fetchOfferById('test-id'));
 
       expect(mockAxiosAdapter.history.get.length).toBe(1);
-      expect(mockAxiosAdapter.history.get[0].url).toBe('/offers/test-id');
+      expect(mockAxiosAdapter.history.get[0].url).toBe('offers/test-id');
     });
   });
 
@@ -123,7 +123,7 @@ describe('Offers async actions', () => {
       await store.dispatch(fetchNearbyOffers('123'));
 
       expect(mockAxiosAdapter.history.get.length).toBe(1);
-      expect(mockAxiosAdapter.history.get[0].url).toBe('/offers/123/nearby');
+      expect(mockAxiosAdapter.history.get[0].url).toBe('offers/123/nearby');
     });
   });
 });

@@ -58,7 +58,7 @@ describe('Reviews async actions', () => {
       await store.dispatch(fetchReviews('test-id'));
 
       expect(mockAxiosAdapter.history.get.length).toBe(1);
-      expect(mockAxiosAdapter.history.get[0].url).toBe('/comments/test-id');
+      expect(mockAxiosAdapter.history.get[0].url).toBe('comments/test-id');
     });
 
     it('should dispatch pending and rejected when server response 400', async () => {
@@ -105,7 +105,7 @@ describe('Reviews async actions', () => {
       await store.dispatch(sendReview(reviewData));
 
       expect(mockAxiosAdapter.history.post.length).toBe(1);
-      expect(mockAxiosAdapter.history.post[0].url).toBe('/comments/test-id');
+      expect(mockAxiosAdapter.history.post[0].url).toBe('comments/test-id');
       const postRequest = mockAxiosAdapter.history.post[0];
       const requestData: string = postRequest.data as string;
       expect(JSON.parse(requestData)).toEqual({
