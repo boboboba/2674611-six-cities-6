@@ -128,4 +128,32 @@ describe('UserProcess Slice', () => {
 
     expect(result).toEqual(initialState);
   });
+  describe('logout action', () => {
+    it('should reset state to NoAuth and null userData', () => {
+      const initialState = {
+        authorizationStatus: AuthorizationStatus.Auth,
+        userData: mockUserData,
+      };
+
+      const result = userProcess.reducer(initialState, userProcess.actions.logout());
+
+      expect(result.authorizationStatus).toBe(AuthorizationStatus.NoAuth);
+      expect(result.userData).toBeNull();
+    });
+
+    it('should work from any authorization status', () => {
+      const initialState = {
+        authorizationStatus: AuthorizationStatus.Auth,
+        userData: mockUserData,
+      };
+
+      const result = userProcess.reducer(initialState, userProcess.actions.logout());
+
+      expect(result).toEqual({
+        authorizationStatus: AuthorizationStatus.NoAuth,
+        userData: null,
+      });
+    });
+  });
+
 });

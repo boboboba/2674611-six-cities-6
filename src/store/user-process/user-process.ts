@@ -1,4 +1,3 @@
-// store/user-process/user-process.slice.ts
 import {createSlice} from '@reduxjs/toolkit';
 import {AuthorizationStatus, NameSpace} from '../../const';
 import {UserData} from '../../types/user-data';
