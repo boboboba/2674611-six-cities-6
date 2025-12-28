@@ -7,9 +7,10 @@ import {useEffect} from 'react';
 import {fetchNearbyOffers, fetchOfferById} from '../../store/api-actions/offers.ts';
 import LoadingScreen from '../../components/loading-screen/loading-screen.tsx';
 import Header from '../../components/header/header.tsx';
-import {NameSpace} from '../../const.ts';
+import {AuthorizationStatus, NameSpace} from '../../const.ts';
 import ReviewList from '../../components/review-list/review-list.tsx';
 import {fetchReviews} from '../../store/api-actions/review.ts';
+import NotFoundPage from "../not-found/not-found-page.tsx";
 
 function OfferPage(): JSX.Element {
   const {id} = useParams();
@@ -20,6 +21,8 @@ function OfferPage(): JSX.Element {
   const isOfferLoading = useAppSelector((state) => state[NameSpace.Offers].isLoading);
 
   const reviews = useAppSelector((state) => state[NameSpace.Reviews].reviews);
+
+  const authorizationStatus = useAppSelector((state) => state[NameSpace.User].authorizationStatus);
 
   useEffect(() => {
     if (id && (!offer || offer.id !== id)) {
@@ -40,7 +43,7 @@ function OfferPage(): JSX.Element {
   }
 
   if (!offer) {
-    return <div>Offer not found</div>;
+    return <NotFoundPage/>;
   }
 
   return (
@@ -138,7 +141,9 @@ function OfferPage(): JSX.Element {
               <section className="offer__reviews reviews">
                 <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{reviews.length}</span></h2>
                 <ReviewList reviews={reviews}/>
-                <ReviewForm offerId={id!}/>
+                {authorizationStatus === AuthorizationStatus.Auth ? (
+                  <ReviewForm offerId={id!}/>
+                ) : null}
               </section>
             </div>
           </div>
